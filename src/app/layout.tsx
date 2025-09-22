@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Ancizar_Sans } from "next/font/google";
+import { Quicksand } from "next/font/google";
+import { Navbar } from "./components/Navbar"; // ✅ import globally
 
-const ancizar = Ancizar_Sans({
+const quicksand = Quicksand({
   subsets: ["latin"],
   variable: "--font-sans",
+  fallback: ["Arial", "sans-serif"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -18,9 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={ancizar.variable}>
-      <body className="font-sans">
-        {children}
+    <html lang="en" className={quicksand.variable}>
+      <body>
+        <Navbar />
+        <main className="max-w-[90%] mx-auto">{children}</main>
       </body>
     </html>
   );
