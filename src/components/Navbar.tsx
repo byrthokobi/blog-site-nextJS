@@ -114,7 +114,15 @@ export const Navbar = () => {
             >
                 {/* Mobile Menu Header */}
                 <div className="flex justify-between items-center p-6 border-b">
-                    <h2 className="text-xl font-semibold text-gray-800">Menu</h2>
+                    <div className="logo px-2 sm:px-4 py-2">
+                        <Image
+                            src={Logo}
+                            width={180}
+                            height={30}
+                            alt="Logo.png"
+                            className="sm:w-[240px] sm:h-[40px]"
+                        />
+                    </div>
                     <button
                         onClick={closeMenu}
                         className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
