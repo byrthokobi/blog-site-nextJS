@@ -1,7 +1,6 @@
 import { SectionHeader } from "@/components/CustomHeader";
 import { FeatureCard } from "@/components/FeatureCard";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { StarIcon } from "lucide-react";
+import BlogPostsSection from "./NewestPostComponent";
 
 export default function Home() {
   return (
@@ -18,6 +17,8 @@ export default function Home() {
         </h2>
       </div>
 
+
+      {/*Feature-Card Section*/}
       <div className="bg-transparent">
         <SectionHeader
           variant="purple"
@@ -50,6 +51,8 @@ export default function Home() {
 
       </div>
 
+      {/*Newest-Post Section*/}
+      <BlogPostsSection />
     </div>
   );
 }
