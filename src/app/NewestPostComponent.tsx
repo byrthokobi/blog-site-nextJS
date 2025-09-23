@@ -161,14 +161,11 @@ const BlogPostsSection: React.FC<BlogPostsSectionProps> = ({
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Header */}
+        <div className="max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Newest posts</h2>
-
                 {/* Search and Filter Controls */}
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full">
                         <button
                             onClick={() => setShowFilters(!showFilters)}
                             className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
@@ -177,14 +174,14 @@ const BlogPostsSection: React.FC<BlogPostsSectionProps> = ({
                             Filter
                         </button>
 
-                        <div className="relative">
+                        <div className="w-full relative">
                             <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="Search posts..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="pl-10 w-full pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                             />
                         </div>
                     </div>

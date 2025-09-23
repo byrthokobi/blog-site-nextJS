@@ -4,7 +4,7 @@ import BlogPostsSection from "./NewestPostComponent";
 
 export default function Home() {
   return (
-    <div className="main-body h-full">
+    <div className="main-body h-full space-y-12">
       {/*Hero Heading Section*/}
       <div className="text-center p-6 md:p-10 h-96 flex justify-center items-center">
         <h2 className="text-2xl md:text-3xl lg:text-4xl leading-snug">
@@ -19,12 +19,12 @@ export default function Home() {
 
 
       {/*Feature-Card Section*/}
-      <div className="bg-transparent">
+      <div>
         <SectionHeader
           variant="purple"
           title="Featured Blogs!"
         />
-        <div className="w-fullflex justify-center">
+        <div className="w-full flex justify-center">
           <div className="grid md:grid-cols-1 lg:grid-cols-2 p-8 mx-auto gap-8">
             <FeatureCard
               imageSrc="/blog-image1.jpg"
@@ -52,7 +52,14 @@ export default function Home() {
       </div>
 
       {/*Newest-Post Section*/}
-      <BlogPostsSection />
+
+      <div>
+        <SectionHeader
+          title="Newest Blogs!"
+          variant="orange"
+        />
+        <BlogPostsSection />
+      </div>
     </div>
   );
 }
