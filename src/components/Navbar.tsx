@@ -21,15 +21,17 @@ export const Navbar = () => {
         <div className="border-b-1 border-b-gray bg-white sticky top-0 z-50">
             <div className="flex justify-between items-center px-4 sm:px-6 max-w-[90%] mx-auto">
                 {/* Logo */}
-                <div className="logo px-2 sm:px-4 py-2">
-                    <Image
-                        src={Logo}
-                        width={180}
-                        height={30}
-                        alt="Logo.png"
-                        className="sm:w-[240px] sm:h-[40px]"
-                    />
-                </div>
+                <Link href="/">
+                    <div className="logo px-2 sm:px-4 py-2">
+                        <Image
+                            src={Logo}
+                            width={180}
+                            height={30}
+                            alt="Logo.png"
+                            className="sm:w-[240px] sm:h-[40px]"
+                        />
+                    </div>
+                </Link>
 
                 {/* Desktop Menu Items */}
                 <div className="hidden lg:flex justify-center gap-8 px-3 py-2">
