@@ -14,7 +14,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({ imageSrc, title, link 
     return (
         <Card className="flex flex-col items-center text-center p-4 transition-all duration-300 transform hover:shadow-[0_10px_25px_-5px_rgba(255,0,150,0.4),0_5px_10px_-5px_rgba(0,0,255,0.3)]">
             {/* Image */}
-            <div className="overflow-hidden rounded-md w-full relative h-40 sm:h-48 md:h-56 lg:h-64">
+            <div className="overflow-hidden rounded-md w-full relative h-40 sm:h-48 md:h-62 lg:h-78">
                 <Image
                     src={imageSrc}
                     alt={title}

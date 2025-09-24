@@ -2,7 +2,27 @@ import { SectionHeader } from "@/components/CustomHeader";
 import { FeatureCard } from "@/components/FeatureCard";
 import BlogPostsSection from "./NewestPostComponent";
 
-export default function Home() {
+interface PostProps {
+  title: string;
+  content?: string;
+  url?: string;
+  featuredImage?: {
+    url?: string;
+  };
+}
+
+export default async function Home() {
+
+  const url = process.env.BASE_URL;
+  const data = await fetch(`${url}/api/posts`, {
+    cache: "no-store"
+  });
+  const posts = await data.json();
+  const featuredPosts: PostProps[] = posts.docs.slice(0, 4);
+
+  // console.log(posts);
+
+  posts
   return (
     <div className="main-body h-full space-y-12">
       {/*Hero Heading Section*/}
@@ -17,7 +37,6 @@ export default function Home() {
         </h2>
       </div>
 
-
       {/*Feature-Card Section*/}
       <div>
         <SectionHeader
@@ -26,26 +45,13 @@ export default function Home() {
         />
         <div className="w-full flex justify-center">
           <div className="grid md:grid-cols-1 lg:grid-cols-2 p-8 mx-auto gap-8">
-            <FeatureCard
-              imageSrc="/blog-image1.jpg"
-              title="Enabling customers to deliver production-ready AI agents at scale"
-              link="#"
-            />
-            <FeatureCard
-              imageSrc="/blog-image1.jpg"
-              title="Enabling customers to deliver production-ready AI agents at scale"
-              link="#"
-            />
-            <FeatureCard
-              imageSrc="/blog-image1.jpg"
-              title="Enabling customers to deliver production-ready AI agents at scale"
-              link="#"
-            />
-            <FeatureCard
-              imageSrc="/blog-image1.jpg"
-              title="Enabling customers to deliver production-ready AI agents at scale"
-              link="#"
-            />
+            {featuredPosts.map((post) => (
+              <FeatureCard
+                imageSrc={post.featuredImage ? `${url}/${post.featuredImage.url}` : "/placeholder.jpg"}
+                title={post.title}
+                link="#"
+              />
+            ))}
           </div>
         </div>
 
