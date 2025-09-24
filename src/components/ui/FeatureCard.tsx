@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "./button";
 
 interface FeatureCardProps {
     imageSrc: string;
