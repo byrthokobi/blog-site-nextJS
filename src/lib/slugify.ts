@@ -1,4 +1,4 @@
-export function slugify(title: string): string {
+export function slugify(title: string | undefined): string | undefined {
     if (!title) return "";
     return title
         .toLowerCase()

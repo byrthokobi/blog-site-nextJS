@@ -1,13 +1,11 @@
 import Image from "next/image";
 
-interface BlogPostPageProps {
-    params: { slug: string };
-}
-
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-    const { slug } = await params;
+export default async function BlogPostPage({ params }: { params: { category: string; slug: string } }) {
+    const { category, slug } = await params;
     const slugParts = slug.split("-");
     const id = slugParts[slugParts.length - 1];
+
+    console.log("id: " + id);
 
     const url = process.env.BASE_URL;
     const data = await fetch(`${url}/api/posts/${id}`);
@@ -15,8 +13,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     const title = post.title;
     const publishedAt = new Date(post.publishedAt).toLocaleDateString();
-    const category = post.categories?.name ?? "Uncategorized";
+    const categoryName = category.toUpperCase();
     const content = post.content?.root?.children?.[0]?.children?.[0]?.text ?? "";
+
+    console.log(post.categories);
+
     const featuredImage = post.featuredImage
         ? `${url}${post.featuredImage.url}`
         : "/placeholder.jpg";
@@ -52,7 +53,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     />
                     <span>{authorName}</span>
                 </div>
-                • <span>{publishedAt}</span> • <span>{category}</span>
+                • <span>{publishedAt}</span> • <span>{categoryName}</span>
             </div>
 
             {/* Blog Content */}

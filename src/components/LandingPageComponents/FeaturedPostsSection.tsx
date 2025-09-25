@@ -10,6 +10,9 @@ interface PostProps {
         url?: string;
     };
     id: string;
+    categories?: {
+        name: string;
+    }
 }
 
 export default async function FeaturedPostsSection() {
@@ -24,7 +27,7 @@ export default async function FeaturedPostsSection() {
             <div className="w-full flex justify-center">
                 <div className="grid md:grid-cols-1 lg:grid-cols-2 p-8 mx-auto gap-8">
                     {featuredPosts.map((post, idx) => {
-                        const postLink = `/${slugify(post.title)}-${post.id}`;
+                        const postLink = `/blogs/${slugify(post.categories?.name)}/${slugify(post.title)}-${post.id}`;
                         return (
                             <FeatureCard
                                 key={idx}
