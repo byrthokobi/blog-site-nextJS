@@ -1,6 +1,6 @@
 import { SectionHeader } from "@/components/ui/CustomHeader";
 import { FeatureCard } from "@/components/ui/FeatureCard";
-import { slugify } from "@/lib/slugify";
+import { slugify } from "@/lib/utils/slugify";
 
 interface PostProps {
     title: string;

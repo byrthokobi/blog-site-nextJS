@@ -1,5 +1,5 @@
 import { FeatureCard } from '@/components/ui/FeatureCard';
-import { slugify } from '@/lib/slugify';
+import { slugify } from '@/lib/utils/slugify';
 import { notFound } from 'next/navigation';
 import React from 'react'
 
