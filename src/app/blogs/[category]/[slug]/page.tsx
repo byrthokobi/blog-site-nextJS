@@ -1,5 +1,26 @@
 import Image from "next/image";
 
+
+interface Author {
+    firstName?: string;
+    lastName?: string;
+    avatar?: {
+        url: string;
+    };
+}
+
+
+interface Comment {
+    id: string;
+    content: string;
+    createdAt: string;
+    author?: Author;
+}
+
+interface CommentsResponse {
+    docs: Comment[];
+}
+
 export default async function BlogPostPage({ params }: { params: { category: string; slug: string } }) {
     const { category, slug } = await params;
     const slugParts = slug.split("-");
@@ -16,8 +37,6 @@ export default async function BlogPostPage({ params }: { params: { category: str
     const categoryName = category.toUpperCase();
     const content = post.content?.root?.children?.[0]?.children?.[0]?.text ?? "";
 
-    console.log(post.categories);
-
     const featuredImage = post.featuredImage
         ? `${url}${post.featuredImage.url}`
         : "/placeholder.jpg";
@@ -26,6 +45,24 @@ export default async function BlogPostPage({ params }: { params: { category: str
     const authorAvatar = post.author?.avatar
         ? `${url}${post.author.avatar.url}`
         : "/default-avatar.png";
+
+    const commentsRes = await fetch(
+        `${url}/api/comments?where[post][equals]=${id}`,
+        { cache: "no-store" }
+    );
+    const commentsData: CommentsResponse = await commentsRes.json();
+
+    console.log(commentsData);
+
+    const comments = commentsData.docs.map((c) => ({
+        id: c.id,
+        author: `${c.author?.firstName ?? "Anonymous"} ${c.author?.lastName ?? ""}`.trim(),
+        content: c.content,
+        createdAt: new Date(c.createdAt).toLocaleString(),
+        avatar: c.author?.avatar?.url
+            ? `${url}${c.author.avatar.url}`
+            : "/default-avatar.png",
+    }));
 
     return (
         <article className="max-w-4xl mx-auto p-6">
@@ -66,6 +103,37 @@ export default async function BlogPostPage({ params }: { params: { category: str
                 <div className="flex-grow border-t border-gray-300"></div>
                 <span className="px-4 text-gray-500 text-sm">The End</span>
                 <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+
+            <div className="max-w-3xl mx-auto p-6">
+                <h3 className="text-2xl font-bold mb-6">Comments ({comments.length})</h3>
+
+                {/* Comment Form */}
+                <div className="mb-8 border-b pb-6">
+                    <textarea
+                        placeholder="Add a comment..."
+                        className="w-full p-3 border border-gray-300 rounded mb-3 focus:outline-none focus:border-gray-600"
+                    />
+                    <button className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
+                        Post Comment
+                    </button>
+                </div>
+
+                {/* Comments */}
+                <div className="space-y-6">
+                    {comments.map(comment => (
+                        <div key={comment.id} className="border-b pb-4">
+                            <div className="flex items-center mb-2">
+                                <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-white text-sm mr-3">
+                                    {comment.author.charAt(0)}
+                                </div>
+                                <span className="font-medium">{comment.author}</span>
+                                <span className="text-gray-500 text-sm ml-2">{comment.createdAt}</span>
+                            </div>
+                            <p className="text-gray-800 ml-11">{comment.content}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </article>
     );
