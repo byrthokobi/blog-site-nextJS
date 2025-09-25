@@ -1,4 +1,4 @@
-import { NewestPostsSection } from "../components/LandingPageComponents/NewestPostsSection";
+import NewestPostsSection from "../components/LandingPageComponents/NewestPostsSection";
 import FeaturedPostsSection from "@/components/LandingPageComponents/FeaturedPostsSection";
 import HeroSection from "@/components/LandingPageComponents/HeroSection";
 
