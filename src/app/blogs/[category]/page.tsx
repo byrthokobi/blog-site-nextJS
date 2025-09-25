@@ -1,5 +1,6 @@
 import { FeatureCard } from '@/components/ui/FeatureCard';
 import { slugify } from '@/lib/slugify';
+import { notFound } from 'next/navigation';
 import React from 'react'
 
 interface Post {
@@ -23,7 +24,7 @@ export default async function CategoryPage({ params }: { params: { category: str
     function formatCategoryName(name: string) {
         return name
             .split("-")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize first letter
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
     }
 
@@ -36,13 +37,14 @@ export default async function CategoryPage({ params }: { params: { category: str
 
     const categoryData = await categoryRes.json();
 
-    console.log(categoryData);
+    // console.log(categoryData);
+
     const categoryId = categoryData.docs?.[0]?.id;
 
-    console.log(categoryId);
+    // console.log(categoryId);
 
     if (!categoryId) {
-        return <p>No category found</p>;
+        return <p className='text-center min-h-[600px]'>No category found</p>;
     }
 
     const res = await fetch(
@@ -68,21 +70,25 @@ export default async function CategoryPage({ params }: { params: { category: str
                 </div>
             </section>
             <div className="w-[75%] grid md:grid-cols-1 lg:grid-cols-2 p-8 mx-auto gap-8">
-                {posts.map((post, idx) => {
-                    const postLink = `/blogs/${slugify(post.categories?.name)}/${slugify(post.title)}-${post.id}`;
-                    return (
-                        <FeatureCard
-                            key={idx}
-                            imageSrc={
-                                post.featuredImage
-                                    ? `${url}/${post.featuredImage.url}`
-                                    : "/placeholder.jpg"
-                            }
-                            title={post.title}
-                            link={postLink}
-                        />
-                    );
-                })}
+                {posts.length ? (
+
+                    posts.map((post, idx) => {
+                        const postLink = `/blogs/${slugify(post.categories?.name)}/${slugify(post.title)}-${post.id}`;
+                        return (
+                            <FeatureCard
+                                key={idx}
+                                imageSrc={
+                                    post.featuredImage
+                                        ? `${url}/${post.featuredImage.url}`
+                                        : "/placeholder.jpg"
+                                }
+                                title={post.title}
+                                link={postLink}
+                            />
+                        );
+                    })) : <p>No posts found in this category.</p>
+
+                }
             </div>
         </div>
     );

@@ -24,7 +24,6 @@ interface BlogPostProps {
 
 
 export default async function NewestPostsSection() {
-    // const [searchTerm, setSearchTerm] = useState('');
     const url = process.env.BASE_URL;
     const res = await fetch(`${url}/api/posts`, { cache: "no-store" });
     const data = await res.json();
@@ -54,8 +53,6 @@ export default async function NewestPostsSection() {
                                 <input
                                     type="text"
                                     placeholder="Search posts..."
-                                    // value={searchTerm}
-                                    // onChange={(e) => setSearchTerm(e.target.value)}
                                     className="pl-10 w-full pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                                 />
                             </div>
@@ -92,26 +89,10 @@ export default async function NewestPostsSection() {
                                 </h3>
                             </Link>
 
-                            {/* Post Excerpt */}
                             <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
                                 {post.excerpt}
                             </p>
 
-                            {/* Tags */}
-                            {/* <div className="flex flex-wrap gap-2 mb-4">
-                                {post.tags.slice(0, 4).map((tag, index) => (
-                                    <Link
-                                        key={index}
-                                        href={`/tags/${tag.toLowerCase()}`}
-                                        className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors"
-                                    >
-                                        <Tag size={10} />
-                                        {tag}
-                                    </Link>
-                                ))}
-                            </div> */}
-
-                            {/* Author */}
                             <div className="flex items-center gap-2">
                                 <img
                                     src={post.author?.avatar
@@ -130,28 +111,6 @@ export default async function NewestPostsSection() {
                     ))}
                 </div>
 
-                {/* Pagination */}
-                {/* <div className="flex items-center justify-center gap-2">
-                    <button
-                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                        disabled={currentPage === 1}
-                        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 disabled:text-gray-400 hover:bg-gray-100 rounded-md transition-colors disabled:cursor-not-allowed"
-                    >
-                        <ChevronLeft size={16} />
-                        Previous
-                    </button>
-
-                    {renderPagination()}
-
-                    <button
-                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                        disabled={currentPage === totalPages}
-                        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 disabled:text-gray-400 hover:bg-gray-100 rounded-md transition-colors disabled:cursor-not-allowed"
-                    >
-                        Next
-                        <ChevronRight size={16} />
-                    </button>
-                </div> */}
             </div>
         </div>
     );
