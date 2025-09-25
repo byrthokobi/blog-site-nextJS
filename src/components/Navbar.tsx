@@ -12,14 +12,16 @@ export const Navbar = () => {
 
     // Sample categories - replace with your actual categories
     const categories = [
-        { name: 'Technology', href: '/categories/technology' },
-        { name: 'Fashion', href: '/categories/fashion' },
-        { name: 'Home & Garden', href: '/categories/home-garden' },
-        { name: 'Sports', href: '/categories/sports' },
-        { name: 'Books', href: '/categories/books' },
-        { name: 'Electronics', href: '/categories/electronics' },
-        { name: 'Food & Beverage', href: '/categories/food-beverage' },
-        { name: 'Health & Beauty', href: '/categories/health-beauty' }
+        { name: 'Technology', href: '/blogs/technology' },
+        { name: 'General', href: '/blogs/general' },
+        { name: 'Nature', href: '/blogs/fashion' },
+        { name: 'Lifestyle', href: '/blogs/lifestyle' },
+        { name: 'Current Affairs', href: '/blogs/current-affairs' },
+        { name: 'Sports', href: '/blogs/sports' },
+        { name: 'News', href: '/blogs/news' },
+        { name: 'Movies', href: '/blogs/movies' },
+        { name: 'Anime', href: '/blogs/anime' },
+        { name: 'Cosmos', href: '/blogs/cosmos' }
     ]
 
     const toggleMenu = () => {
@@ -60,8 +62,7 @@ export const Navbar = () => {
                         onMouseEnter={() => setIsCategoriesOpen(true)}
                         onMouseLeave={() => setIsCategoriesOpen(false)}
                     >
-                        <Link
-                            href="/categories"
+                        <div
                             className="flex items-center gap-2 px-4 py-2 transition-all duration-300 transform rounded-xl hover:scale-110 hover:bg-yellow-400 font-medium"
                         >
                             <span>Categories</span>
@@ -72,7 +73,7 @@ export const Navbar = () => {
                                     <ChevronDown size={16} className="transform transition-transform duration-200" />
                                 )}
                             </div>
-                        </Link>
+                        </div>
 
                         {/* Dropdown Menu */}
                         <div

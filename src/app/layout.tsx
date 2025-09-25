@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className={quicksand.variable}>
       <body>
         <Navbar />
-        <main className="max-w-[90%] mx-auto">{children}</main>
+        <main className="mx-auto">{children}</main>
         <Footer />
       </body>
     </html>
