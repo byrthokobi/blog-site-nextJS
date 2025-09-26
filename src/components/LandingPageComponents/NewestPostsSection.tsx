@@ -6,28 +6,11 @@ import {
     Calendar,
 } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
-
-// Types
-interface BlogPostProps {
-    id: string;
-    title: string;
-    excerpt: string;
-    publishedAt: string;
-    author: {
-        firstName: string;
-        lastName: string;
-        avatar?: { url: string };
-    };
-    categories: { name: string };
-}
-
-
+import { fetchAllPosts } from '@/lib/api/posts';
 
 export default async function NewestPostsSection() {
     const url = process.env.BASE_URL;
-    const res = await fetch(`${url}/api/posts`, { cache: "no-store" });
-    const data = await res.json();
-    const posts: BlogPostProps[] = data.docs ?? [];
+    const posts = await fetchAllPosts();
     const totalPosts = posts.length;
 
     return (
@@ -79,32 +62,29 @@ export default async function NewestPostsSection() {
                                     <span>{post.publishedAt}</span>
                                 </div>
                                 <span>•</span>
-                                <span>{post.categories.name}</span>
+                                <span>{post.categories?.name}</span>
                             </div>
 
                             {/* Post Title */}
-                            <Link href={`/blog/${post.categories.name}`}>
+                            <Link href={`/blog/${post.categories?.name}`}>
                                 <h3 className="text-xl font-semibold text-blue-600 hover:text-blue-800 cursor-pointer mb-3 line-clamp-2">
                                     {post.title}
                                 </h3>
                             </Link>
 
-                            <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
-                                {post.excerpt}
-                            </p>
 
                             <div className="flex items-center gap-2">
                                 <img
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}
-                                    alt={`${post.author.firstName} ` +
-                                        `${post.author.lastName}`}
+                                    alt={`${post.author?.firstName} ` +
+                                        `${post.author?.lastName}`}
                                     className="w-8 h-8 rounded-full object-cover"
                                 />
                                 <span className="text-sm font-medium text-gray-700">
-                                    {`${post.author.firstName} ` +
-                                        `${post.author.lastName}`}
+                                    {`${post.author?.firstName} ` +
+                                        `${post.author?.lastName}`}
                                 </span>
                             </div>
                         </article>

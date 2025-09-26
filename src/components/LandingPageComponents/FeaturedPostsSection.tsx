@@ -1,25 +1,13 @@
 import { SectionHeader } from "@/components/ui/CustomHeader";
 import { FeatureCard } from "@/components/ui/FeatureCard";
+import { fetchAllPosts } from "@/lib/api/posts";
 import { slugify } from "@/lib/utils/slugify";
 
-interface PostProps {
-    title: string;
-    content?: string;
-    link?: string;
-    featuredImage?: {
-        url?: string;
-    };
-    id: string;
-    categories?: {
-        name: string;
-    }
-}
 
 export default async function FeaturedPostsSection() {
     const url = process.env.BASE_URL;
-    const data = await fetch(`${url}/api/posts`, { cache: "no-store" });
-    const posts = await data.json();
-    const featuredPosts: PostProps[] = posts.docs.slice(0, 4);
+    const posts = await fetchAllPosts();
+    const featuredPosts = posts.slice(0, 4);
 
     return (
         <div>

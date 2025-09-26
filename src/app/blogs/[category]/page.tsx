@@ -1,58 +1,21 @@
 import { FeatureCard } from '@/components/ui/FeatureCard';
+import { fetchPostsByCategory } from '@/lib/api/posts';
+import { getCategoryBySlug } from '@/lib/data/categoryMapper';
 import { slugify } from '@/lib/utils/slugify';
-import { notFound } from 'next/navigation';
 import React from 'react'
-
-interface Post {
-    id: string;
-    title: string;
-    publishedAt: string;
-    author: {
-        firstName: string;
-        lastName: string;
-        avatar?: { url: string };
-    };
-    featuredImage?: { url: string };
-    categories: { name: string };
-}
-
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
     const { category } = await params;
-    const url = process.env.BASE_URL;
+    const fetchCategoryData = await getCategoryBySlug(category);
+    const url = process.env.BASE_URL || "";
 
-    function formatCategoryName(name: string) {
-        return name
-            .split("-")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    }
-
-    const formattedCategory = formatCategoryName(category);
-
-    const categoryRes = await fetch(
-        `${url}/api/categories?where[name][equals]=${encodeURIComponent(formattedCategory)}`,
-        { cache: "no-store" }
-    );
-
-    const categoryData = await categoryRes.json();
-
-    // console.log(categoryData);
-
-    const categoryId = categoryData.docs?.[0]?.id;
-
-    // console.log(categoryId);
+    const categoryId = fetchCategoryData?.id;
 
     if (!categoryId) {
         return <p className='text-center min-h-[600px]'>No category found</p>;
     }
 
-    const res = await fetch(
-        `${url}/api/posts?where[categories][equals]=${categoryId}`,
-        { cache: "no-store" }
-    );
-    const data = await res.json();
-    const posts: Post[] = data.docs || [];
+    const posts = await fetchPostsByCategory(categoryId);
 
     console.log(posts);
 
