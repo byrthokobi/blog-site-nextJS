@@ -1,28 +1,21 @@
 "use client"
 
-import { LogIn, User, Menu, X, HomeIcon, ChevronUp, ChevronDown } from 'lucide-react'
+import { LogIn, X, HomeIcon, ChevronUp, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Logo from '../../public/logo.png'
+import { Category, CategoryUI } from '@/lib/types/categories'
+import { slugify } from '@/lib/utils/slugify'
 
-export const Navbar = () => {
+interface NavbarProps {
+    categories: CategoryUI[];
+}
+
+export const Navbar = ({ categories }: NavbarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
 
-    // Sample categories - replace with your actual categories
-    const categories = [
-        { name: 'Technology', href: '/blogs/technology' },
-        { name: 'General', href: '/blogs/general' },
-        { name: 'Nature', href: '/blogs/fashion' },
-        { name: 'Lifestyle', href: '/blogs/lifestyle' },
-        { name: 'Current Affairs', href: '/blogs/current-affairs' },
-        { name: 'Sports', href: '/blogs/sports' },
-        { name: 'News', href: '/blogs/news' },
-        { name: 'Movies', href: '/blogs/movies' },
-        { name: 'Anime', href: '/blogs/anime' },
-        { name: 'Cosmos', href: '/blogs/cosmos' }
-    ]
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -85,14 +78,14 @@ export const Navbar = () => {
                             <div className="py-2">
                                 {categories.map((category, index) => (
                                     <Link
-                                        key={category.name}
-                                        href={category.href}
+                                        key={category.categoryName}
+                                        href={`/blogs/${slugify(category.categoryName)}`}
                                         className="block px-4 py-3 text-gray-700 hover:bg-yellow-400 hover:text-gray-900 transition-colors duration-200 font-medium"
                                         style={{
                                             transitionDelay: isCategoriesOpen ? `${index * 30}ms` : '0ms'
                                         }}
                                     >
-                                        {category.name}
+                                        {category.categoryName}
                                     </Link>
                                 ))}
                             </div>
@@ -211,15 +204,15 @@ export const Navbar = () => {
                             <div className="ml-4 space-y-2 pt-2">
                                 {categories.map((category, index) => (
                                     <Link
-                                        key={category.name}
-                                        href={category.href}
+                                        key={category.categoryName}
+                                        href={`/blogs/${slugify(category.categoryName)}`}
                                         onClick={closeMenu}
                                         className="block px-4 py-2 text-base font-medium text-gray-600 rounded-lg hover:bg-yellow-300 hover:text-gray-900 transition-colors duration-200"
                                         style={{
                                             transitionDelay: isCategoriesOpen ? `${index * 50}ms` : '0ms'
                                         }}
                                     >
-                                        {category.name}
+                                        {category.categoryName}
                                     </Link>
                                 ))}
                             </div>

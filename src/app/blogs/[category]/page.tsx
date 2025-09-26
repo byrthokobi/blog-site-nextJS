@@ -17,8 +17,6 @@ export default async function CategoryPage({ params }: { params: { category: str
 
     const posts = await fetchPostsByCategory(categoryId);
 
-    console.log(posts);
-
     return (
         <div className="min-h-screen text-center flex flex-col">
             <section className="relative bg-gray-900 text-white w-full h-64">
