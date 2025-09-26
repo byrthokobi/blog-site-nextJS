@@ -3,13 +3,13 @@ import FeaturedPostsSection from "@/components/LandingPageComponents/FeaturedPos
 import HeroSection from "@/components/LandingPageComponents/HeroSection";
 
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams?: { query?: string } }) {
 
   return (
     <div className="max-w-[90%] mx-auto h-full space-y-12">
       <HeroSection />
       <FeaturedPostsSection />
-      <NewestPostsSection />
+      <NewestPostsSection searchParams={searchParams} />
     </div>
   );
 }

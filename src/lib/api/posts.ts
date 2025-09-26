@@ -30,3 +30,17 @@ export async function fetchPostsByCategory(categoryId: string): Promise<Post[]> 
   const data = await res.json();
   return data.docs || [];
 }
+
+
+export async function fetchPostsBySearch(searchTerm?: string): Promise<Post[]> {
+  const query = searchTerm
+    ? `?where[title][contains]=${encodeURIComponent(searchTerm)}`
+    : "";
+
+  const res = await fetch(`${url}/api/posts${query}`, { cache: "no-store" });
+
+  if (!res.ok) throw new Error("Failed to fetch posts");
+
+  const data = await res.json();
+  return data.docs || [];
+}

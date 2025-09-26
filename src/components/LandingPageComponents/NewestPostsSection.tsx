@@ -6,11 +6,19 @@ import {
     Calendar,
 } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
-import { fetchAllPosts } from '@/lib/api/posts';
+import { fetchPostsBySearch } from '@/lib/api/posts';
+import SearchBar from '../ui/SearchBar';
 
-export default async function NewestPostsSection() {
+interface NewestPostsSectionProps {
+    searchParams?: { query?: string };
+}
+
+export default async function NewestPostsSection({ searchParams }: NewestPostsSectionProps) {
     const url = process.env.BASE_URL;
-    const posts = await fetchAllPosts();
+    const searchText = await searchParams;
+    const searchTerm = searchText?.query ?? "";
+
+    const posts = await fetchPostsBySearch(searchTerm);
     const totalPosts = posts.length;
 
     return (
@@ -21,7 +29,6 @@ export default async function NewestPostsSection() {
             />
             <div className="max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    {/* Search and Filter Controls */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6">
                         <div className="flex gap-2 w-full">
                             <button
@@ -32,12 +39,9 @@ export default async function NewestPostsSection() {
                             </button>
 
                             <div className="w-full relative">
-                                <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="Search posts..."
-                                    className="pl-10 w-full pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                />
+                                <div className="w-full relative">
+                                    <SearchBar />
+                                </div>
                             </div>
                         </div>
                     </div>
