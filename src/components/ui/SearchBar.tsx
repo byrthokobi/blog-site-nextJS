@@ -10,13 +10,12 @@ export default function SearchBar() {
     const initialQuery = searchParams.get("query") || "";
     const [query, setQuery] = useState(initialQuery);
 
-    // Debounce state
     const [debouncedQuery, setDebouncedQuery] = useState(query);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedQuery(query);
-        }, 300); // debounce delay (300ms)
+        }, 300);
 
         return () => {
             clearTimeout(handler);
