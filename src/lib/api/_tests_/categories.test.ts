@@ -1,6 +1,4 @@
-// __tests__/api/categories.test.ts
 import { fetchAllCategories } from "@/lib/api/categories";
-// import { Category } from "@/lib/types/categories";
 
 global.fetch = jest.fn();
 
