@@ -1,4 +1,3 @@
-// slugify.test.ts
 import { slugify } from "../slugify";
 
 describe("slugify utility", () => {

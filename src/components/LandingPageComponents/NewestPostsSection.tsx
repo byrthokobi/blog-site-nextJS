@@ -1,10 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import {
-    Filter,
-    Search,
-    Calendar,
-} from 'lucide-react';
+import { Filter, Calendar } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
 import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
