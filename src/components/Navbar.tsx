@@ -1,21 +1,35 @@
 "use client"
 
-import { LogIn, X, HomeIcon, ChevronUp, ChevronDown } from 'lucide-react'
+import { LogIn, X, HomeIcon, ChevronUp, ChevronDown, UserCog } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../public/logo.png'
-import { Category, CategoryUI } from '@/lib/types/categories'
+import { CategoryUI } from '@/lib/types/categories'
 import { slugify } from '@/lib/utils/slugify'
+import Cookies from 'js-cookie'
+import { User } from '@/lib/types/auth'
+
 
 interface NavbarProps {
     categories: CategoryUI[];
 }
 
 export const Navbar = ({ categories }: NavbarProps) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
+    useEffect(() => {
+        const storedUser = Cookies.get("payloadSession");
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch {
+                setUser(null);
+            }
+        }
+    }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -106,9 +120,19 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 </div>
 
                 <div className="hidden lg:flex nav-profile py-2 gap-3">
-                    <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
-                        Login <LogIn size={16} />
-                    </button>
+                    {user ? (
+                        <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                            {user.firstName} <UserCog size={16} />
+                        </button>
+                    ) : (
+                        <>
+                            <Link href="/login">
+                                <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                    Login <LogIn size={16} />
+                                </button>
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Hamburger Menu Button */}
