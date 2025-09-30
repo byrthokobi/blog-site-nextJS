@@ -6,7 +6,22 @@ import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
 
 interface NewestPostsSectionProps {
+<<<<<<< Updated upstream
     searchParams?: { query?: string };
+=======
+    searchParams?: {
+        query?: string;
+        filter?: string;
+    };
+}
+
+async function fetchPostsWithFilter(searchTerm: string, isFiltered: boolean): Promise<Post[]> {
+    const posts = await fetchPostsBySearch(searchTerm);
+    if (isFiltered) {
+        return posts.filter(post => post.title.toLowerCase().includes('next'));
+    }
+    return posts;
+>>>>>>> Stashed changes
 }
 
 export default async function NewestPostsSection({ searchParams }: NewestPostsSectionProps) {
@@ -42,7 +57,6 @@ export default async function NewestPostsSection({ searchParams }: NewestPostsSe
                         </div>
                     </div>
 
-                    {/* Results count */}
                     <p className="text-sm text-gray-600 mb-6">
                         Displaying {posts.length} of {totalPosts} posts
                     </p>
