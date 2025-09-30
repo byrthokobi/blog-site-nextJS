@@ -4,11 +4,9 @@ import { Filter, Calendar } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
 import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
+import { Post } from '@/lib/types/posts';
 
 interface NewestPostsSectionProps {
-<<<<<<< Updated upstream
-    searchParams?: { query?: string };
-=======
     searchParams?: {
         query?: string;
         filter?: string;
@@ -21,7 +19,6 @@ async function fetchPostsWithFilter(searchTerm: string, isFiltered: boolean): Pr
         return posts.filter(post => post.title.toLowerCase().includes('next'));
     }
     return posts;
->>>>>>> Stashed changes
 }
 
 export default async function NewestPostsSection({ searchParams }: NewestPostsSectionProps) {
