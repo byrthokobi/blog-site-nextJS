@@ -9,7 +9,8 @@ import { CategoryUI } from '@/lib/types/categories'
 import { slugify } from '@/lib/utils/slugify'
 import Cookies from 'js-cookie'
 import { User } from '@/lib/types/auth'
-
+import { logoutUser } from '@/lib/api/auth'
+import { useRouter } from "next/navigation";
 
 interface NavbarProps {
     categories: CategoryUI[];
@@ -19,6 +20,8 @@ export const Navbar = ({ categories }: NavbarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const storedUser = Cookies.get("payloadSession");
@@ -30,6 +33,21 @@ export const Navbar = ({ categories }: NavbarProps) => {
             }
         }
     }, []);
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await logoutUser();
+        } catch (err) {
+            console.warn("Logout API failed:", err);
+        } finally {
+            Cookies.remove("payloadSession"); // always clean local state
+            setUser(null);
+            router.push("/login");
+            router.refresh();
+            setIsLoggingOut(false);
+        }
+    };
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -121,8 +139,11 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
                 <div className="hidden lg:flex nav-profile py-2 gap-3">
                     {user ? (
-                        <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
-                            {user.firstName} <UserCog size={16} />
+                        <button
+                            className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300"
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}>
+                            {isLoggingOut ? "Logging Out..." : `${user.firstName} | LogOut`} <UserCog size={16} />
                         </button>
                     ) : (
                         <>
@@ -258,13 +279,20 @@ export const Navbar = ({ categories }: NavbarProps) => {
                     </Link>
 
                     {/* Mobile Login Button */}
-                    <div className="pt-4 mt-4 border-t">
-                        <button
-                            onClick={closeMenu}
-                            className="w-full justify-center nav-button gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg transition-colors duration-300 font-medium"
-                        >
-                            Login <LogIn size={18} />
-                        </button>
+                    <div className="hidden lg:flex nav-profile py-2 gap-3">
+                        {user ? (
+                            <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                {user.firstName} | LogOut <UserCog size={16} />
+                            </button>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                        Login <LogIn size={16} />
+                                    </button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

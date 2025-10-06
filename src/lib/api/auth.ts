@@ -1,4 +1,4 @@
-import { LoginRequest, LoginResponse } from "@/lib/types/auth";
+import { LoginRequest, LoginResponse, LogoutResponse } from "@/lib/types/auth";
 import { url } from "@/lib/utils/config";
 
 export async function loginUser(
@@ -12,7 +12,6 @@ export async function loginUser(
     });
 
     if (!res.ok) {
-      // Try to read error body for more details
       const errorBody = await res.text();
       throw new Error(
         `Login failed (${res.status}): ${errorBody || "Invalid credentials"}`
@@ -23,5 +22,27 @@ export async function loginUser(
   } catch (error) {
     console.error("Error logging in:", error);
     throw error;
+  }
+}
+
+export async function logoutUser(): Promise<LogoutResponse> {
+  const res = await fetch(`${url}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    return {
+      success: false,
+      message: "Logout failed",
+    };
+  }
+
+  try {
+    const data = (await res.json()) as LogoutResponse;
+    return data;
+  } catch {
+    return { success: true };
   }
 }
