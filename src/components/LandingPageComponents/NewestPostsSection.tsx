@@ -4,6 +4,7 @@ import { Filter, Calendar } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
 import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
+import Image from 'next/image';
 // import { Post } from '@/lib/types/posts';
 
 interface NewestPostsSectionProps {
@@ -87,7 +88,7 @@ export default async function NewestPostsSection({ searchParams }: NewestPostsSe
 
 
                             <div className="flex items-center gap-2">
-                                <img
+                                <Image
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}

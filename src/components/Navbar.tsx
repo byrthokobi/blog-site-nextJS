@@ -3,7 +3,7 @@
 import { LogIn, X, HomeIcon, ChevronUp, ChevronDown, UserCog } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Logo from '../../public/logo.png'
 import { CategoryUI } from '@/lib/types/categories'
 import { slugify } from '@/lib/utils/slugify'

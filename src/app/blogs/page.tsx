@@ -3,6 +3,7 @@ import { fetchAllPosts } from '@/lib/api/posts';
 import { Calendar } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default async function AllBlogsPage() {
     const url = process.env.BASE_URL;
@@ -45,7 +46,7 @@ export default async function AllBlogsPage() {
 
 
                             <div className="flex items-center gap-2">
-                                <img
+                                <Image
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}
