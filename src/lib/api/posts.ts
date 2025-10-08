@@ -25,8 +25,8 @@ export async function fetchPostById(id: string): Promise<Post | null> {
     });
 
     if (!res.ok) throw new Error("Failed to fetch post");
-
-    return await res.json();
+    const data = await res.json();
+    return data || null;
   } catch (error) {
     console.error(`Error in fetchPostById(${id}):`, error);
     return null;
