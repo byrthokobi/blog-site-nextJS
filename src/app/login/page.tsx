@@ -56,7 +56,17 @@ export default function LoginPage() {
             setUser(data.user);
             router.push("/");
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Login failed";
+            let message = "Login failed";
+
+            const httpError = err as { status?: number, message?: string };
+
+            if (httpError.status === 500 || httpError.status === undefined) {
+                message = "Invalid email or password. Please try again.";
+            } else if (httpError.status === 401 || httpError.status === 403) {
+                message = "Invalid email or password.";
+            } else {
+                message = httpError.message || "An unexpected error occurred.";
+            }
             setError("root", { message });
         }
     };
