@@ -4,7 +4,7 @@ import { Filter, Calendar } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
 import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
-import { Post } from '@/lib/types/posts';
+// import { Post } from '@/lib/types/posts';
 
 interface NewestPostsSectionProps {
     searchParams?: {
@@ -13,13 +13,15 @@ interface NewestPostsSectionProps {
     };
 }
 
-async function fetchPostsWithFilter(searchTerm: string, isFiltered: boolean): Promise<Post[]> {
-    const posts = await fetchPostsBySearch(searchTerm);
-    if (isFiltered) {
-        return posts.filter(post => post.title.toLowerCase().includes('next'));
-    }
-    return posts;
-}
+// Filter
+
+// async function fetchPostsWithFilter(searchTerm: string, isFiltered: boolean): Promise<Post[]> {
+//     const posts = await fetchPostsBySearch(searchTerm);
+//     if (isFiltered) {
+//         return posts.filter(post => post.title.toLowerCase().includes('next'));
+//     }
+//     return posts;
+// }
 
 export default async function NewestPostsSection({ searchParams }: NewestPostsSectionProps) {
     const url = process.env.BASE_URL;

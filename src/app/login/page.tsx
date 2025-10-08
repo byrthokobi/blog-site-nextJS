@@ -3,9 +3,11 @@
 import { loginUser } from "@/lib/api/auth";
 import { LoginResponse } from "@/lib/types/auth";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/AuthContext";
 
 const LoginSchema = z.object({
     email: z
@@ -18,35 +20,29 @@ const LoginSchema = z.object({
         .string()
         .min(6, "Use at least 6 characters.")
         .max(128, "Password is too long.")
-        .refine((v) => !/\s/.test(v), "Password must not contain spaces.")
+        .refine((v) => !/\s/.test(v), "Password must not contain spaces."),
 });
 
+type LoginFormValues = z.infer<typeof LoginSchema>;
+
 export default function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
+    const { setUser } = useAuth();
     const router = useRouter();
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setValidationErrors({});
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormValues>({
+        resolver: zodResolver(LoginSchema),
+        defaultValues: { email: "", password: "" },
+        mode: "onSubmit",
+    });
 
-        const result = LoginSchema.safeParse({ email, password });
-
-        if (!result.success) {
-            const fieldErrors = result.error.flatten().fieldErrors;
-            setValidationErrors({
-                email: fieldErrors.email?.[0],
-                password: fieldErrors.password?.[0],
-            });
-            return;
-        }
-
+    const onSubmit = async (values: LoginFormValues) => {
         try {
-            const data: LoginResponse = await loginUser({ email, password });
-            console.log("Login successful:", data);
+            const data: LoginResponse = await loginUser(values);
 
             if (!data.user.sessions || data.user.sessions.length === 0) {
                 throw new Error("No session found in response");
@@ -57,22 +53,20 @@ export default function LoginPage() {
                 secure: true,
                 sameSite: "strict",
             });
-
-            window.location.href = "/";
+            setUser(data.user);
+            router.push("/");
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("Login failed");
-            }
+            const message = err instanceof Error ? err.message : "Login failed";
+            setError("root", { message });
         }
     };
 
     return (
         <div className="flex min-h-[600px] items-center justify-center text-white">
             <form
-                onSubmit={handleLogin}
+                onSubmit={handleSubmit(onSubmit)}
                 className="w-full h-auto max-w-sm space-y-6 rounded-xl bg-neutral-900 p-8 shadow-lg"
+                noValidate
             >
                 <h1 className="text-2xl font-bold text-center">Login</h1>
 
@@ -80,14 +74,17 @@ export default function LoginPage() {
                     <input
                         type="email"
                         placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className={`w-full rounded-md border bg-neutral-800 px-4 py-2 text-white placeholder-gray-400 focus:outline-none ${validationErrors.email ? "border-red-500 focus:border-red-500" : "border-neutral-700 focus:border-white"
+                        aria-invalid={!!errors.email}
+                        disabled={isSubmitting}
+                        {...register("email")}
+                        className={`w-full rounded-md border bg-neutral-800 px-4 py-2 text-white placeholder-gray-400 focus:outline-none 
+                                disabled:opacity-70 
+                                disabled:cursor-not-allowed
+                                ${errors.email ? "border-red-500 focus:border-red-500" : "border-neutral-700 focus:border-white"
                             }`}
                     />
-                    {validationErrors.email && (
-                        <p className="mt-1 text-sm text-red-400">{validationErrors.email}</p>
+                    {errors.email?.message && (
+                        <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
                     )}
                 </div>
 
@@ -95,26 +92,42 @@ export default function LoginPage() {
                     <input
                         type="password"
                         placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className={`w-full rounded-md border bg-neutral-800 px-4 py-2 text-white placeholder-gray-400 focus:outline-none ${validationErrors.password ? "border-red-500 focus:border-red-500" : "border-neutral-700 focus:border-white"
+                        aria-invalid={!!errors.password}
+                        disabled={isSubmitting}
+                        {...register("password")}
+                        className={`w-full rounded-md border bg-neutral-800 px-4 py-2 text-white placeholder-gray-400 focus:outline-none
+                                disabled:opacity-70 
+                                disabled:cursor-not-allowed
+                                ${errors.password ? "border-red-500 focus:border-red-500" : "border-neutral-700 focus:border-white"
                             }`}
                     />
-                    {validationErrors.password && (
-                        <p className="mt-1 text-sm text-red-400">{validationErrors.password}</p>
+                    {errors.password?.message && (
+                        <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
                     )}
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full cursor-pointer rounded-md bg-white px-4 py-2 font-semibold text-black transition hover:bg-gray-200"
+                    disabled={isSubmitting}
+                    className="w-full
+                        cursor-pointer 
+                        rounded-md
+                        bg-white 
+                        px-4 py-2 
+                        font-semibold 
+                        text-black 
+                        transition 
+                        hover:bg-gray-200 
+                        disabled:opacity-70 
+                        disabled:cursor-not-allowed"
                 >
-                    Login
+                    {isSubmitting ? "Logging in..." : "Login"}
                 </button>
 
-                {error && (
-                    <p className="mt-2 text-center text-sm text-red-400">{error}</p>
+                {"root" in errors && errors.root?.message && (
+                    <p className="mt-2 text-center text-sm text-red-400">
+                        {errors.root.message}
+                    </p>
                 )}
             </form>
         </div>

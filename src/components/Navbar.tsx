@@ -8,9 +8,9 @@ import Logo from '../../public/logo.png'
 import { CategoryUI } from '@/lib/types/categories'
 import { slugify } from '@/lib/utils/slugify'
 import Cookies from 'js-cookie'
-import { User } from '@/lib/types/auth'
 import { logoutUser } from '@/lib/api/auth'
 import { useRouter } from "next/navigation";
+import { useAuth } from '@/lib/context/AuthContext'
 
 interface NavbarProps {
     categories: CategoryUI[];
@@ -19,20 +19,9 @@ interface NavbarProps {
 export const Navbar = ({ categories }: NavbarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        const storedUser = Cookies.get("payloadSession");
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch {
-                setUser(null);
-            }
-        }
-    }, []);
+    const { user, setUser } = useAuth();
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
@@ -41,21 +30,15 @@ export const Navbar = ({ categories }: NavbarProps) => {
         } catch (err) {
             console.warn("Logout API failed:", err);
         } finally {
-            Cookies.remove("payloadSession"); // always clean local state
+            Cookies.remove("payloadSession");
             setUser(null);
             router.push("/login");
-            router.refresh();
             setIsLoggingOut(false);
         }
     };
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
-
-    const closeMenu = () => {
-        setIsMenuOpen(false)
-    }
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <div className="border-b-1 border-b-gray bg-white sticky top-0 z-50">

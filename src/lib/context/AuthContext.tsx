@@ -1,0 +1,38 @@
+"use client";
+
+import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { User } from "@/lib/types/auth";
+
+interface AuthContextType {
+    user: User | null;
+    setUser: (user: User | null) => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const [user, setUser] = useState<User | null>(null);
+    useEffect(() => {
+        const storedUser = Cookies.get("payloadSession");
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch {
+                setUser(null);
+            }
+        }
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ user, setUser }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+    return ctx;
+};
