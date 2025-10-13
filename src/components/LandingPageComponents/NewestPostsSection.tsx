@@ -89,6 +89,8 @@ export default async function NewestPostsSection({ searchParams }: NewestPostsSe
 
                             <div className="flex items-center gap-2">
                                 <Image
+                                    width={800}
+                                    height={800}
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}

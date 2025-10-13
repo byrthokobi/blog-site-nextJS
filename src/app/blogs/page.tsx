@@ -47,6 +47,8 @@ export default async function AllBlogsPage() {
 
                             <div className="flex items-center gap-2">
                                 <Image
+                                    height={800}
+                                    width={800}
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}
