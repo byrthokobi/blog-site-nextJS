@@ -1,29 +1,44 @@
 "use client"
 
-import { LogIn, X, HomeIcon, ChevronUp, ChevronDown } from 'lucide-react'
+import { LogIn, X, HomeIcon, ChevronUp, ChevronDown, UserCog } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Logo from '../../public/logo.png'
-import { Category, CategoryUI } from '@/lib/types/categories'
+import { CategoryUI } from '@/lib/types/categories'
 import { slugify } from '@/lib/utils/slugify'
+import Cookies from 'js-cookie'
+import { logoutUser } from '@/lib/api/auth'
+import { useRouter } from "next/navigation";
+import { useAuth } from '@/lib/context/AuthContext'
 
 interface NavbarProps {
     categories: CategoryUI[];
 }
 
 export const Navbar = ({ categories }: NavbarProps) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const router = useRouter();
+    const { user, setUser } = useAuth();
 
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await logoutUser();
+        } catch (err) {
+            console.warn("Logout API failed:", err);
+        } finally {
+            Cookies.remove("payloadSession");
+            setUser(null);
+            router.push("/login");
+            setIsLoggingOut(false);
+        }
+    };
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
-
-    const closeMenu = () => {
-        setIsMenuOpen(false)
-    }
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <div className="border-b-1 border-b-gray bg-white sticky top-0 z-50">
@@ -106,9 +121,22 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 </div>
 
                 <div className="hidden lg:flex nav-profile py-2 gap-3">
-                    <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
-                        Login <LogIn size={16} />
-                    </button>
+                    {user ? (
+                        <button
+                            className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300"
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}>
+                            {isLoggingOut ? "Logging Out..." : `${user.firstName} | LogOut`} <UserCog size={16} />
+                        </button>
+                    ) : (
+                        <>
+                            <Link href="/login">
+                                <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                    Login <LogIn size={16} />
+                                </button>
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Hamburger Menu Button */}
@@ -234,13 +262,20 @@ export const Navbar = ({ categories }: NavbarProps) => {
                     </Link>
 
                     {/* Mobile Login Button */}
-                    <div className="pt-4 mt-4 border-t">
-                        <button
-                            onClick={closeMenu}
-                            className="w-full justify-center nav-button gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg transition-colors duration-300 font-medium"
-                        >
-                            Login <LogIn size={18} />
-                        </button>
+                    <div className="hidden lg:flex nav-profile py-2 gap-3">
+                        {user ? (
+                            <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                {user.firstName} | LogOut <UserCog size={16} />
+                            </button>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    <button className="nav-button flex items-center gap-2 px-4 py-2 text-white transition-colors duration-300">
+                                        Login <LogIn size={16} />
+                                    </button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

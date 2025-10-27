@@ -4,10 +4,25 @@ import { Filter, Calendar } from 'lucide-react';
 import { SectionHeader } from '../ui/CustomHeader';
 import { fetchPostsBySearch } from '@/lib/api/posts';
 import SearchBar from '../ui/SearchBar';
+import Image from 'next/image';
+// import { Post } from '@/lib/types/posts';
 
 interface NewestPostsSectionProps {
-    searchParams?: { query?: string };
+    searchParams?: {
+        query?: string;
+        filter?: string;
+    };
 }
+
+// Filter
+
+// async function fetchPostsWithFilter(searchTerm: string, isFiltered: boolean): Promise<Post[]> {
+//     const posts = await fetchPostsBySearch(searchTerm);
+//     if (isFiltered) {
+//         return posts.filter(post => post.title.toLowerCase().includes('next'));
+//     }
+//     return posts;
+// }
 
 export default async function NewestPostsSection({ searchParams }: NewestPostsSectionProps) {
     const url = process.env.BASE_URL;
@@ -42,7 +57,6 @@ export default async function NewestPostsSection({ searchParams }: NewestPostsSe
                         </div>
                     </div>
 
-                    {/* Results count */}
                     <p className="text-sm text-gray-600 mb-6">
                         Displaying {posts.length} of {totalPosts} posts
                     </p>
@@ -74,7 +88,9 @@ export default async function NewestPostsSection({ searchParams }: NewestPostsSe
 
 
                             <div className="flex items-center gap-2">
-                                <img
+                                <Image
+                                    width={800}
+                                    height={800}
                                     src={post.author?.avatar
                                         ? `${url}${post.author.avatar.url}`
                                         : `/default-avatar.png`}

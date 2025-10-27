@@ -21,7 +21,6 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
     title,
     subtitle,
     variant = 'default',
-    icon: Icon,
     alignment = 'center'
 }) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);

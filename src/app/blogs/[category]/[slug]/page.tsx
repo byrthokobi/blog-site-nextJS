@@ -9,7 +9,21 @@ export default async function BlogPostPage({ params }: { params: { category: str
     const id = slugParts[slugParts.length - 1];
 
     const postData = await fetchPostById(id);
-    const post = mapSinglePost(postData, category)
+    let post;
+
+    if (postData) {
+        post = mapSinglePost(postData, category);
+    } else {
+        return (
+            <>
+                <article className="max-w-4xl mx-auto p-6">
+                    <div className="relative w-full h-80 mb-6">
+                        <p className="text-center">Post Not Found</p>
+                    </div>
+                </article>
+            </>
+        );
+    }
 
     const comments = await getCommentsForPost(id);
 
